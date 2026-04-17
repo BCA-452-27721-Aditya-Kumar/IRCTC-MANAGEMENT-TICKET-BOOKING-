@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IRCTC - Sign Up</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2980 0%, #26d0ce 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 80px 20px 20px; /* space for nav */
+            position: relative;
+            overflow-x: hidden;
+        }
+        /* navigation styles */
+        .nav-container {
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            position: absolute; /* sit above everything */
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            flex: none;
+        }
+        .nav-link {
+            color: #555;
+            text-decoration: none;
+            padding: 0.8rem 2rem;
+            margin: 0 0.5rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1rem;
+        }
+        .nav-link:hover {
+            background-color: #f0f0f0;
+            color: #d32f2f;
+            transform: translateY(-2px);
+        }
+        .nav-link.active {
+            background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(211, 47, 47, 0.3);
+        }
+        /* user dropdown styles */
+        .user-dropdown { position: relative; display: inline-block; margin-left: 1rem; }
+        .dropdown-toggle { cursor: pointer; color: #555; display: flex; align-items: center; gap: 5px; font-weight: 600; }
+        .user-dropdown .dropdown-content { display: none; position: absolute; right: 0; background-color: white; min-width: 200px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-radius: 8px; padding: 15px; z-index: 1000; text-align: left; }
+        .user-dropdown:hover .dropdown-content { display: block; }
+        .user-dropdown .dropdown-content p { margin: 0 0 8px 0; color: #333; font-size: 0.9rem; }
+        .user-dropdown .dropdown-content a { display: block; color: #555; text-decoration: none; padding: 6px 0; font-size: 0.9rem; }
+        .user-dropdown .dropdown-content a:hover { background: #f0f0f0; color: #d32f2f; }
+
+        /* Animated Background Elements */
+        .train-track {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 80px;
+            background: repeating-linear-gradient(
+                90deg,
+                transparent,
+                transparent 50px,
+                #333 50px,
+                #333 100px
+            );
+            opacity: 0.1;
+            z-index: 0;
+        }
+
+        .floating-train {
+            position: absolute;
+            top: 20%;
+            right: -200px;
+            font-size: 8rem;
+            color: rgba(255, 255, 255, 0.1);
+            animation: trainMove 30s linear infinite;
+            z-index: 0;
+        }
+
+        @keyframes trainMove {
+            0% { right: -200px; }
+            100% { right: 100%; }
+        }
+
+        /* Container */
+        .signup-container {
+            display: flex;
+            width: 100%;
+            max-width: 1000px;
+            min-height: 600px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Left Side - Brand Section */
+        .brand-section {
+            flex: 1;
+            background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
+            color: white;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .brand-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+        }
+
+        .brand-logo {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .brand-title {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .brand-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+
+        .brand-features {
+            text-align: left;
+            margin-top: 40px;
+            width: 100%;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+        }
+
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #d32f2f;
+            font-size: 1.2rem;
+        }
+
+        /* Right Side - Form Section */
+        .form-section {
+            flex: 1;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .form-header h2 {
+            font-size: 2.2rem;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .form-header p {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        /* Error Messages */
+        .error-container {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(238, 90, 82, 0.3);
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .error-message {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .error-message:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Form Styles */
+        .signup-form {
+            width: 100%;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-label i {
+            color: #d32f2f;
+            width: 20px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #d32f2f;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(211, 47, 47, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .form-input::placeholder {
+            color: #999;
+        }
+
+        .password-strength {
+            height: 4px;
+            background: #e0e0e0;
+            border-radius: 2px;
+            margin-top: 5px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .strength-bar {
+            height: 100%;
+            width: 0%;
+            background: #ff6b6b;
+            transition: all 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .strength-text {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 5px;
+            text-align: right;
+        }
+
+        /* Password Visibility Toggle */
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 45px;
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
+        }
+
+        .password-toggle:hover {
+            color: #d32f2f;
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            box-shadow: 0 8px 20px rgba(211, 47, 47, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: 0.5s;
+        }
+
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(211, 47, 47, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .submit-btn i {
+            font-size: 1.3rem;
+        }
+
+        /* Footer Links */
+        .form-footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .form-footer p {
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .login-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #d32f2f;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 10px 20px;
+            border: 2px solid #d32f2f;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .login-link:hover {
+            background: #d32f2f;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(211, 47, 47, 0.3);
+        }
+
+        /* Terms Checkbox */
+        .terms-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .terms-checkbox {
+            margin-top: 3px;
+        }
+
+        .terms-label {
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .terms-label a {
+            color: #d32f2f;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .terms-label a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            .signup-container {
+                flex-direction: column;
+                max-width: 500px;
+            }
+
+            .brand-section {
+                padding: 30px;
+            }
+
+            .brand-logo {
+                font-size: 3rem;
+            }
+
+            .brand-title {
+                font-size: 2rem;
+            }
+
+            .form-section {
+                padding: 30px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .brand-section,
+            .form-section {
+                padding: 20px;
+            }
+
+            .brand-logo {
+                font-size: 2.5rem;
+            }
+
+            .brand-title {
+                font-size: 1.8rem;
+            }
+
+            .form-header h2 {
+                font-size: 1.8rem;
+            }
+        }
+
+        /* Progress Steps */
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .progress-steps::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #e0e0e0;
+            z-index: 0;
+        }
+
+        .step {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border: 3px solid #e0e0e0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-weight: bold;
+            position: relative;
+            z-index: 1;
+            transition: all 0.3s ease;
+        }
+
+        .step.active {
+            border-color: #d32f2f;
+            background: #d32f2f;
+            color: white;
+            box-shadow: 0 5px 15px rgba(211, 47, 47, 0.3);
+        }
+
+        .step.completed {
+            border-color: #4caf50;
+            background: #4caf50;
+            color: white;
+        }
+
+        /* Success Animation */
+        .success-animation {
+            display: none;
+            text-align: center;
+            animation: successPulse 2s infinite;
+        }
+
+        @keyframes successPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav-container">
+        <a href="Index.html" class="nav-link"><i class="fas fa-home"></i> Home</a>
+        <a href="book ticket.html" class="nav-link"><i class="fas fa-ticket-alt"></i> Book Ticket</a>
+        <a href="cancel_ticket.php" class="nav-link"><i class="fas fa-times-circle"></i> Cancel Ticket</a>
+        <a href="Singup.html" id="signupLink" class="nav-link active"><i class="fas fa-user-plus"></i> Sign up</a>
+        <a href="login.html" id="loginButton" class="nav-link"><i class="fas fa-sign-in-alt"></i> Login</a>
+        <span id="userNav"></span>
+    </nav>
+    <!-- Animated Background Elements -->
+    <div class="train-track"></div>
+    <div class="floating-train">
+        <i class="fas fa-train"></i>
+    </div>
+
+    <!-- Main Container -->
+    <div class="signup-container">
+        <!-- Left Side - Brand Section -->
+        <div class="brand-section">
+            <div class="brand-logo">
+                <i class="fas fa-train"></i>
+            </div>
+            <div class="brand-title">IRCTC</div>
+            <div class="brand-subtitle">Indian Railway Catering and Tourism Corporation</div>
+            
+            <div class="brand-features">
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div>
+                        <h4>Secure Platform</h4>
+                        <p>256-bit SSL encrypted</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <div>
+                        <h4>Instant Booking</h4>
+                        <p>Book in under 2 minutes</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <div>
+                        <h4>24/7 Support</h4>
+                        <p>Always here to help</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side - Form Section -->
+        <div class="form-section">
+            <!-- Progress Steps -->
+            <div class="progress-steps">
+                <div class="step active">1</div>
+                <div class="step">2</div>
+                <div class="step">3</div>
+            </div>
+
+            <div class="form-header">
+                <h2>Create Your Account</h2>
+                <p>Join millions of travelers using IRCTC</p>
+            </div>
+
+            <!-- Error Messages Container -->
+            <div id="errors" class="error-container" style="display: none;"></div>
+
+            <!-- Signup Form -->
+            <form class="signup-form" action="../Backend/signup.php" method="post">
+                <div class="form-group">
+                    <label class="form-label" for="fullname">
+                        <i class="fas fa-user"></i> Full Name
+                    </label>
+                    <input type="text" id="fullname" name="fullname" 
+                           class="form-input" 
+                           placeholder="Enter your full name" 
+                           required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="email">
+                        <i class="fas fa-envelope"></i> Email Address
+                    </label>
+                    <input type="email" id="email" name="email" 
+                           class="form-input" 
+                           placeholder="Enter your email address" 
+                           required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="password">
+                        <i class="fas fa-lock"></i> Password
+                    </label>
+                    <input type="password" id="password" name="password" 
+                           class="form-input" 
+                           placeholder="Create a strong password" 
+                           required>
+                    <button type="button" class="password-toggle" id="togglePassword">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                    <div class="password-strength">
+                        <div class="strength-bar" id="strengthBar"></div>
+                    </div>
+                    <div class="strength-text" id="strengthText">Weak</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="confirm-password">
+                        <i class="fas fa-lock"></i> Confirm Password
+                    </label>
+                    <input type="password" id="confirm-password" name="confirm-password" 
+                           class="form-input" 
+                           placeholder="Re-enter your password" 
+                           required>
+                    <button type="button" class="password-toggle" id="toggleConfirmPassword">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+
+                <div class="terms-group">
+                    <input type="checkbox" id="terms" name="terms" class="terms-checkbox" required>
+                    <label for="terms" class="terms-label">
+                        I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+                    </label>
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-user-plus"></i> Create Account
+                </button>
+            </form>
+
+            <div class="form-footer">
+                <p>Already have an account?</p>
+                <a href="login.html" class="login-link">
+                    <i class="fas fa-sign-in-alt"></i> Sign In Now
+                </a>
+            </div>
+
+            <!-- Success Animation (Hidden by default) -->
+            <div class="success-animation" id="successAnimation">
+                <i class="fas fa-check-circle" style="font-size: 4rem; color: #4caf50;"></i>
+                <h3>Account Created Successfully!</h3>
+                <p>Redirecting to login page...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Original error display logic (unchanged)
+        const urlParams = new URLSearchParams(window.location.search);
+        const errors = urlParams.getAll('error[]');
+        if (errors.length > 0) {
+            const errorDiv = document.getElementById('errors');
+            errorDiv.style.display = 'block';
+            errorDiv.innerHTML = errors.map(err => 
+                `<div class="error-message"><i class="fas fa-exclamation-circle"></i> ${err}</div>`
+            ).join('');
+        }
+
+        // New Enhanced Features
+
+        // Password strength indicator
+        const passwordInput = document.getElementById('password');
+        const strengthBar = document.getElementById('strengthBar');
+        const strengthText = document.getElementById('strengthText');
+
+        // user nav dynamic update
+        fetch('get_user.php')
+          .then(res => res.json())
+          .then(user => {
+            if (user) {
+              document.getElementById('signupLink').style.display = 'none';
+              document.getElementById('loginButton').style.display = 'none';
+              const container = document.getElementById('userNav');
+              container.innerHTML = `<div class="user-dropdown">
+                  <span class="dropdown-toggle"><i class="fas fa-user-circle"></i> ${user.name}</span>
+                  <div class="dropdown-content">
+                      <p><strong>${user.name}</strong></p>
+                      <p>${user.email}</p>
+                      <a href="profile.php"><i class="fas fa-user"></i> View Profile</a>
+                      <a href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                  </div>
+              </div>`;
+            }
+          });
+
+        passwordInput.addEventListener('input', function() {
+            const password = this.value;
+            let strength = 0;
+            
+            // Check password strength
+            if (password.length >= 8) strength++;
+            if (/[A-Z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^A-Za-z0-9]/.test(password)) strength++;
+            
+            // Update strength bar and text
+            const strengthPercentage = (strength / 4) * 100;
+            strengthBar.style.width = `${strengthPercentage}%`;
+            
+            // Update color and text based on strength
+            if (strength === 0) {
+                strengthBar.style.background = '#ff6b6b';
+                strengthText.textContent = 'Weak';
+                strengthText.style.color = '#ff6b6b';
+            } else if (strength <= 2) {
+                strengthBar.style.background = '#ffa726';
+                strengthText.textContent = 'Fair';
+                strengthText.style.color = '#ffa726';
+            } else if (strength === 3) {
+                strengthBar.style.background = '#42a5f5';
+                strengthText.textContent = 'Good';
+                strengthText.style.color = '#42a5f5';
+            } else {
+                strengthBar.style.background = '#4caf50';
+                strengthText.textContent = 'Strong';
+                strengthText.style.color = '#4caf50';
+            }
+        });
+
+        // Password visibility toggle
+        const togglePassword = document.getElementById('togglePassword');
+        const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+
+        togglePassword.addEventListener('click', function() {
+            const passwordField = document.getElementById('password');
+            const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordField.setAttribute('type', type);
+            this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+        });
+
+        toggleConfirmPassword.addEventListener('click', function() {
+            const confirmPasswordField = document.getElementById('confirm-password');
+            const type = confirmPasswordField.getAttribute('type') === 'password' ? 'text' : 'password';
+            confirmPasswordField.setAttribute('type', type);
+            this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+        });
+
+        // Password confirmation validation
+        const confirmPasswordInput = document.getElementById('confirm-password');
+        
+        confirmPasswordInput.addEventListener('input', function() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = this.value;
+            
+            if (confirmPassword && password !== confirmPassword) {
+                this.style.borderColor = '#ff6b6b';
+                this.style.boxShadow = '0 0 0 4px rgba(255, 107, 107, 0.1)';
+            } else if (confirmPassword) {
+                this.style.borderColor = '#4caf50';
+                this.style.boxShadow = '0 0 0 4px rgba(76, 175, 80, 0.1)';
+            } else {
+                this.style.borderColor = '#e0e0e0';
+                this.style.boxShadow = 'none';
+            }
+        });
+
+        // Form submission animation
+        const form = document.querySelector('.signup-form');
+        const successAnimation = document.getElementById('successAnimation');
+        
+        form.addEventListener('submit', function(event) {
+            // Check if passwords match
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            
+            if (password !== confirmPassword) {
+                event.preventDefault();
+                const errorDiv = document.getElementById('errors');
+                errorDiv.style.display = 'block';
+                errorDiv.innerHTML = '<div class="error-message"><i class="fas fa-exclamation-circle"></i> Passwords do not match</div>';
+                
+                // Scroll to error
+                errorDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+            
+            // Check terms acceptance
+            const termsCheckbox = document.getElementById('terms');
+            if (!termsCheckbox.checked) {
+                event.preventDefault();
+                const errorDiv = document.getElementById('errors');
+                errorDiv.style.display = 'block';
+                errorDiv.innerHTML = '<div class="error-message"><i class="fas fa-exclamation-circle"></i> Please accept the terms and conditions</div>';
+                
+                // Scroll to error
+                errorDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+            
+            // If form is valid, let it submit normally
+            // The backend will handle the actual signup
+        });
+
+        // Add focus effects to inputs
+        const inputs = document.querySelectorAll('.form-input');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'translateY(-5px)';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Animate steps on form interaction
+        let currentStep = 1;
+        const steps = document.querySelectorAll('.step');
+        
+        function updateSteps() {
+            steps.forEach((step, index) => {
+                if (index + 1 < currentStep) {
+                    step.classList.add('completed');
+                    step.classList.remove('active');
+                } else if (index + 1 === currentStep) {
+                    step.classList.add('active');
+                    step.classList.remove('completed');
+                } else {
+                    step.classList.remove('active', 'completed');
+                }
+            });
+        }
+        
+        // Update steps based on form field focus
+        inputs.forEach((input, index) => {
+            input.addEventListener('focus', () => {
+                currentStep = Math.min(Math.floor(index / 2) + 1, 3);
+                updateSteps();
+            });
+        });
+
+        // Initial step update
+        updateSteps();
+    </script>
+</body>
+</html>

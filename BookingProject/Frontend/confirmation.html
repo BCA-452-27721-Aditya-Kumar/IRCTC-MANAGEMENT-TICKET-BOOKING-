@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Confirmation - IRCTC</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
+            color: white;
+            padding: 1.5rem 0;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path d="M0,50 Q25,40 50,50 T100,50 L100,100 L0,100 Z" fill="rgba(255,255,255,0.05)"/></svg>');
+            background-size: 100px;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            position: relative;
+        }
+
+        /* Navigation */
+        nav {
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            padding: 0.8rem 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav a {
+            color: #555;
+            text-decoration: none;
+            padding: 0.8rem 1.5rem;
+            margin: 0 0.5rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        nav a:hover {
+            background-color: #f0f0f0;
+            color: #d32f2f;
+        }
+
+        nav a i {
+            font-size: 1.1rem;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 900px;
+            margin: 3rem auto;
+            padding: 0 1.5rem;
+            flex: 1;
+        }
+
+        /* Success Card */
+        .success-card {
+            background: white;
+            border-radius: 15px;
+            padding: 3rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border-top: 5px solid #4caf50;
+        }
+
+        .success-card::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(76, 175, 80, 0.05) 0%, rgba(76, 175, 80, 0) 70%);
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            color: white;
+            font-size: 2.5rem;
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .success-card h2 {
+            color: #2e7d32;
+            margin-bottom: 0.5rem;
+            font-size: 2.2rem;
+        }
+
+        .success-card .subtitle {
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Ticket Card */
+        .ticket-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border-left: 5px solid #d32f2f;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            position: relative;
+        }
+
+        .ticket-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px dashed #ccc;
+        }
+
+        .ticket-id {
+            background-color: #d32f2f;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .ticket-status {
+            background-color: #4caf50;
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .ticket-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .detail-item {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .detail-label {
+            display: block;
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.3rem;
+        }
+
+        .detail-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .train-info {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .train-icon {
+            background-color: #d32f2f;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .train-text h3 {
+            color: #333;
+            margin-bottom: 0.3rem;
+        }
+
+        .train-text p {
+            color: #666;
+        }
+
+        /* Journey Path */
+        .journey-path {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 2rem 0;
+            padding: 0 1rem;
+            position: relative;
+        }
+
+        .journey-point {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .journey-icon {
+            width: 40px;
+            height: 40px;
+            background-color: #d32f2f;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.5rem;
+        }
+
+        .journey-point span {
+            display: block;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .journey-line {
+            position: absolute;
+            top: 20px;
+            left: 15%;
+            right: 15%;
+            height: 3px;
+            background-color: #ddd;
+            z-index: 1;
+        }
+
+        .journey-line::before {
+            content: "";
+            position: absolute;
+            top: -3px;
+            width: 100%;
+            height: 3px;
+            background-color: #ddd;
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.9rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background-color: #d32f2f;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #b71c1c;
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(211, 47, 47, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: white;
+            color: #333;
+            border: 2px solid #ddd;
+        }
+
+        .btn-secondary:hover {
+            background-color: #f5f5f5;
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-success {
+            background-color: #4caf50;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #388e3c;
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        /* Footer */
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+
+        footer p {
+            opacity: 0.8;
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* Confetti effect */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f0f;
+            opacity: 0.8;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                flex-wrap: wrap;
+                padding: 0.5rem;
+            }
+            
+            nav a {
+                padding: 0.6rem;
+                margin: 0.2rem;
+                font-size: 0.9rem;
+            }
+            
+            .container {
+                padding: 0 1rem;
+            }
+            
+            .success-card {
+                padding: 2rem 1.5rem;
+            }
+            
+            .success-card h2 {
+                font-size: 1.8rem;
+            }
+            
+            .ticket-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .button-group {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            nav, .button-group, footer {
+                display: none;
+            }
+            
+            .success-card {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+        }
+    </style>
+</head>
+<body>
+    <?php
+    session_start();
+    $hasBookingDetails = false;
+    $details = [];
+    $detailsFromSession = false;
+
+    // Prefer session booking details if present
+    if (isset($_SESSION['booking_details'])) {
+        $details = $_SESSION['booking_details'];
+        $hasBookingDetails = true;
+        $detailsFromSession = true;
+    }
+
+    // If ticket_id provided in query, try to load booking from DB (no logic change to existing flow)
+    if (!$hasBookingDetails && isset($_GET['ticket_id']) && !empty($_GET['ticket_id'])) {
+        include __DIR__ . '/../Backend/config.php';
+        $ticket_id = $_GET['ticket_id'];
+        $stmt = $conn->prepare("SELECT ticket_id, train_number, train_name, from_station, to_station, travel_date, class, passenger_name, passenger_age, passenger_gender, passenger_email, passenger_phone FROM bookings WHERE ticket_id = ? LIMIT 1");
+        if ($stmt) {
+            $stmt->bind_param('s', $ticket_id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            if ($row = $result->fetch_assoc()) {
+                $details = [
+                    'ticket_id' => $row['ticket_id'],
+                    'train' => $row['train_name'] . ' (' . $row['train_number'] . ')',
+                    'from' => $row['from_station'],
+                    'to' => $row['to_station'],
+                    'date' => $row['travel_date'],
+                    'class' => $row['class'],
+                    'passenger' => $row['passenger_name'] . ', Age: ' . $row['passenger_age'] . ', Gender: ' . $row['passenger_gender'],
+                    'email' => $row['passenger_email'],
+                    'phone' => $row['passenger_phone']
+                ];
+                $hasBookingDetails = true;
+            }
+            $stmt->close();
+        }
+        $conn->close();
+    }
+    ?>
+    
+    <header>
+        <h1><i class="fas fa-train"></i> IRCTC Train Booking</h1>
+        <p>Indian Railway Catering and Tourism Corporation</p>
+    </header>
+    
+    <nav>
+        <a href="Index.html"><i class="fas fa-home"></i> Home</a>
+        <a href="book ticket.html"><i class="fas fa-ticket-alt"></i> Book Ticket</a>
+        <a href="cancel_ticket.php"><i class="fas fa-times-circle"></i> Cancel Ticket</a>
+        <a href="Singup.html"><i class="fas fa-user-plus"></i> Sign up</a>
+        <a href="login.html"><i class="fas fa-sign-in-alt"></i> Login</a>
+    </nav>
+
+    <div class="container fade-in">
+        <div class="success-card">
+            <div class="success-icon pulse">
+                <i class="fas fa-check"></i>
+            </div>
+            
+            <h2>Booking Confirmed!</h2>
+            <p class="subtitle">Your train ticket has been successfully booked. Details are below.</p>
+            
+            <div class="ticket-card">
+                <div class="ticket-header">
+                    <div class="ticket-id">
+                        <i class="fas fa-ticket-alt"></i> TICKET ID: 
+                        <?php echo $hasBookingDetails ? htmlspecialchars($details['ticket_id']) : "N/A"; ?>
+                    </div>
+                    <div class="ticket-status">
+                        <i class="fas fa-check-circle"></i> CONFIRMED
+                    </div>
+                </div>
+                
+                <?php if ($hasBookingDetails): ?>
+                    <!-- Train info section -->
+                    <div class="train-info">
+                        <div class="train-icon"><i class="fas fa-train"></i></div>
+                        <div class="train-text">
+                            <h3><?php echo htmlspecialchars($details['train']); ?></h3>
+                            <p>Indian Railways</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Journey path -->
+                    <div class="journey-path">
+                        <div class="journey-point">
+                            <div class="journey-icon"><i class="fas fa-map-marker-alt"></i></div>
+                            <span><?php echo htmlspecialchars($details['from']); ?></span>
+                        </div>
+                        
+                        <div class="journey-line"></div>
+                        
+                        <div class="journey-point">
+                            <div class="journey-icon"><i class="fas fa-flag-checkered"></i></div>
+                            <span><?php echo htmlspecialchars($details['to']); ?></span>
+                        </div>
+                    </div>
+                    
+                    <!-- Ticket details -->
+                    <div class="ticket-details">
+                        <div class="detail-item">
+                            <span class="detail-label"><i class="fas fa-user"></i> Passenger Name</span>
+                            <span class="detail-value"><?php echo htmlspecialchars($details['passenger']); ?></span>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <span class="detail-label"><i class="fas fa-calendar"></i> Journey Date</span>
+                            <span class="detail-value"><?php echo htmlspecialchars($details['date']); ?></span>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <span class="detail-label"><i class="fas fa-chair"></i> Travel Class</span>
+                            <span class="detail-value"><?php echo htmlspecialchars($details['class']); ?></span>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <span class="detail-label"><i class="fas fa-envelope"></i> Email Address</span>
+                            <span class="detail-value"><?php echo htmlspecialchars($details['email']); ?></span>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <span class="detail-label"><i class="fas fa-phone"></i> Phone Number</span>
+                            <span class="detail-value"><?php echo htmlspecialchars($details['phone']); ?></span>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <span class="detail-label"><i class="fas fa-clock"></i> Booking Time</span>
+                            <span class="detail-value"><?php echo date('Y-m-d H:i'); ?></span>
+                        </div>
+                    </div>
+                    
+                    <?php 
+                    // Clear session only if details came from session
+                    if (!empty($detailsFromSession) && $detailsFromSession === true) {
+                        unset($_SESSION['booking_details']);
+                    }
+                    ?>
+                    
+                <?php else: ?>
+                    <!-- No booking details message -->
+                    <div class="detail-item" style="grid-column: 1/-1; text-align: center; padding: 2rem;">
+                        <div class="success-icon" style="background: #f0f0f0; color: #666; margin-bottom: 1rem;">
+                            <i class="fas fa-exclamation-circle"></i>
+                        </div>
+                        <h3 style="color: #666;">No Booking Details Found</h3>
+                        <p>It seems there are no booking details to display. Please book a ticket first.</p>
+                    </div>
+                <?php endif; ?>
+            </div>
+            
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="window.location.href='book ticket.html'">
+                    <i class="fas fa-plus-circle"></i> Book Another Ticket
+                </button>
+                <button class="btn btn-success" onclick="window.print()">
+                    <i class="fas fa-print"></i> Print Ticket
+                </button>
+                <button class="btn btn-secondary" onclick="window.location.href='Index.html'">
+                    <i class="fas fa-home"></i> Back to Home
+                </button>
+            </div>
+            
+            <div style="margin-top: 2rem; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
+                <p style="color: #666; font-size: 0.9rem;">
+                    <i class="fas fa-info-circle"></i> 
+                    Please keep your Ticket ID for future reference. You can use it to check booking status or cancel your ticket.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; Welcome to the website of Aditya kumar.</p>
+        <p style="margin-top: 0.5rem; font-size: 0.9rem;">Your trusted partner in railway reservations</p>
+    </footer>
+
+    <script>
+        // Add some confetti effect for celebration
+        document.addEventListener('DOMContentLoaded', function() {
+            const successCard = document.querySelector('.success-card');
+            
+            // Only show confetti if booking details exist
+            <?php if ($hasBookingDetails): ?>
+                createConfetti();
+            <?php endif; ?>
+            
+            // Add animation to ticket card
+            const ticketCard = document.querySelector('.ticket-card');
+            if (ticketCard) {
+                setTimeout(() => {
+                    ticketCard.style.transition = 'all 0.5s ease';
+                    ticketCard.style.transform = 'scale(1.02)';
+                    setTimeout(() => {
+                        ticketCard.style.transform = 'scale(1)';
+                    }, 300);
+                }, 500);
+            }
+        });
+
+        function createConfetti() {
+            const colors = ['#d32f2f', '#4caf50', '#2196f3', '#ff9800', '#9c27b0'];
+            const successCard = document.querySelector('.success-card');
+            
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.top = Math.random() * 100 + '%';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.width = Math.random() * 10 + 5 + 'px';
+                confetti.style.height = Math.random() * 10 + 5 + 'px';
+                confetti.style.opacity = Math.random() * 0.7 + 0.3;
+                confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                confetti.style.position = 'absolute';
+                confetti.style.zIndex = '1';
+                successCard.appendChild(confetti);
+                
+                // Animate confetti
+                const angle = Math.random() * Math.PI * 2;
+                const velocity = 30 + Math.random() * 20;
+                const gravity = 0.1;
+                let x = 0, y = 0;
+                
+                const animate = () => {
+                    x += Math.cos(angle) * velocity * 0.1;
+                    y += Math.sin(angle) * velocity * 0.1 + gravity;
+                    
+                    confetti.style.transform = `translate(${x}px, ${y}px)`;
+                    
+                    if (y < 300) {
+                        requestAnimationFrame(animate);
+                    }
+                };
+                
+                setTimeout(() => {
+                    animate();
+                }, Math.random() * 1000);
+                
+                // Remove confetti after animation
+                setTimeout(() => {
+                    confetti.remove();
+                }, 3000);
+            }
+        }
+    </script>
+</body>
+</html>

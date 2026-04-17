@@ -1,0 +1,237 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  body {
+    font-family: Arial, sans-serif;
+    background: #f3f6f9;
+  }
+  
+  header {
+    background: white;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+  }
+  
+  .logo {
+    height: 50px;
+  }
+  
+  .top-links a {
+    margin-left: 15px;
+    text-decoration: none;
+    color: #003366;
+    font-weight: bold;
+  }
+  
+  nav {
+    display: flex;
+    justify-content: center;
+    background: #003366;
+    padding: 10px 0;
+  }
+  
+  nav a {
+    color: white;
+    margin: 0 10px;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  .main-section {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    padding: 30px;
+    background: linear-gradient(to right, #f7f9fc, #e8f0fa);
+  }
+  
+  .booking-box {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px #ccc;
+    width: 45%;
+  }
+  
+  .booking-box h2 {
+    margin-bottom: 20px;
+    color: #003366;
+  }
+  
+  form input, form select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+  }
+  
+  .options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+  
+  .options label {
+    font-size: 0.9em;
+  }
+  
+  .buttons {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  button {
+    padding: 10px 20px;
+    background-color: #003366;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  button.orange {
+    background-color: orange;
+  }
+  
+  .train-image img {
+    max-width: 500px;
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+  }
+  
+  footer {
+    text-align: center;
+    padding: 15px;
+    background: #003366;
+    color: white;
+    margin-top: 30px;
+  }
+    
+
+   body {
+          margin: 0;
+       font-family: Arial, sans-serif;
+        background-color: #f4f6f8;
+        background-image: url("https://bsmedia.business-standard.com/_media/bs/img/article/2024-09/12/full/1726132120-5752.jpg?im=FeatureCrop,size=(826,465)");
+        background-repeat:no-repeat;
+        background-attachment:fixed;
+        background-size: cover;
+   }
+
+   header {
+     background-color: #003366;
+     color: rgba(157, 210, 11, 0.956);
+     padding: 15px 0;
+     text-align: center;
+   }
+
+   nav {
+     background-color: #0055a5;
+     display: flex;
+     justify-content: center;
+     padding: 10px;
+   }
+
+   nav a {
+     color: rgba(224, 231, 219, 0.841);
+     text-decoration: none;
+     padding: 10px 20px;
+     margin: 0 10px;
+     font-weight: bold;
+   }
+
+   nav a:hover {
+     background-color: #0bf05be6;
+     border-radius: 5px;
+   }
+
+   .container {
+     max-width: 800px;
+     margin: 40px auto;
+     background-color: rgba(206, 221, 211, 0.916);
+     padding: 30px;
+     border-radius: 10px;
+     box-shadow: 0 0 10px rgba(0,0,0,0.1);
+   }
+
+   h2 {
+     text-align: center;
+     color: #003366;
+   }
+
+   form {
+     display: flex;
+     flex-direction: column;
+     gap: 15px;
+   }
+
+   label {
+     font-weight: bold;
+   }
+
+   input, select, button {
+     padding: 10px;
+     font-size: 1em;
+   }
+
+   button {
+     background-color: #0055a5;
+     color: white;
+     border: none;
+     cursor: pointer;
+   }
+
+   button:hover {
+     background-color: #003f7f;
+   }
+
+   footer {
+     text-align: center;
+     background-color: #003366;
+     color: white;
+     padding: 10px 0;
+     position: relative;
+     bottom: 0;
+     width: 100%;
+     margin-top: 50px;
+   }
+
+.menu {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #003366;
+}
+
+.menu li {
+  float: left;
+}
+
+.menu li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+.menu li a:hover {
+  background-color: #111;
+}
+
+.main-content {
+  padding: 20px;
+  text-align: center;
+}
+  
